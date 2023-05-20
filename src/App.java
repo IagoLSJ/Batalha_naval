@@ -1,3 +1,4 @@
+import java.util.Map;
 import java.util.Scanner;
 
 public class App {
@@ -10,7 +11,7 @@ public class App {
 	}
 
 	public static boolean insert(int l, int c, Navio n, Tabuleiro t) {
-		if(n.linha+l > 9 || n.coluna+c > 9) {
+		if (n.linha + l > 9 || n.coluna + c > 9) {
 			System.out.println("Seu navio não cabe aqui!!!");
 			return false;
 		}
@@ -25,96 +26,37 @@ public class App {
 		}
 		return true;
 	}
-	
+
 	public static int scanner(Scanner scanner) {
 		scanner.hasNextInt();
-		while(!scanner.hasNextInt()) {
+		while (!scanner.hasNextInt()) {
 			System.out.println("Coloque entrada válida");
 			scanner.nextLine();
 		}
 		int numero = scanner.nextInt();
-		return numero;		
+		return numero;
 	}
-	
-	public static void inserirNavios(Navio n1, Navio n2, Navio n3, Navio n4, Tabuleiro t, int inserirNavios) {
+
+	public static void inserirNavios(Map<Integer, Navio> navios, Tabuleiro t, int index) {
 		Scanner scanner = new Scanner(System.in);
 		int nl = 0;
 		int nc = 0;
-
-		System.out.println("Coloque seus navios de guerra no mar!!!");
-		while (inserirNavios <= 4) {
-			if (inserirNavios == 1) {
-				System.out.println("Seu navio é 1x4");
-				System.out.format("Insira a linha do %d navio: ", inserirNavios);
-				nl = scanner(scanner);
-				
-
-				System.out.format("Insira a coluna do %d navio: ", inserirNavios);
-				nc = scanner(scanner);
-
-
-			}
-			if (inserirNavios == 2) {
-				System.out.println("Seu navio é 1x1");
-				System.out.format("Insira a linha do %d navio: ", inserirNavios);
-				nl = scanner(scanner);
-	
-
-				System.out.format("Insira a coluna do %d navio: ", inserirNavios);
-				nc = scanner(scanner);
-
-			}
-			if (inserirNavios == 3) {
-				System.out.println("Seu navio é 2x2");
-				System.out.format("Insira a linha do %d navio: ", inserirNavios);
-				nl = scanner(scanner);
-
-
-				System.out.format("Insira a coluna do %d navio: ", inserirNavios);
-				nc = scanner(scanner);
-
-
-			}
-			if (inserirNavios == 4) {
-				System.out.println("Seu navio é 3x2");
-				System.out.format("Insira a linha do %d navio: ", inserirNavios);
-				nl = scanner(scanner);
-
-
-				System.out.format("Insira a coluna do %d navio: ", inserirNavios);
-				nc = scanner(scanner);
-
-			}
-
-			if (!validacao(nl, nc)) {
-				inserirNavios(n1, n2, n3, n4, t, inserirNavios);
-			}
-
-			switch (inserirNavios) {
-			case 1:
-				if(!insert(nl, nc, n1, t))
-					inserirNavios(n1, n2, n3, n4, t, inserirNavios);
-				break;
-			case 2:
-				if(!insert(nl, nc, n2, t))
-					inserirNavios(n1, n2, n3, n4, t, inserirNavios);
-				break;
-			case 3:
-				if(!insert(nl, nc, n3, t))
-					inserirNavios(n1, n2, n3, n4, t, inserirNavios);
-				break;
-			case 4:
-				if(!insert(nl, nc, n4, t))
-					inserirNavios(n1, n2, n3, n4, t, inserirNavios);
-				break;
-			default:
-				break;
-			}
-
-			System.out.flush();
-			inserirNavios++;
+		boolean isInsert = false;
+		if (index == 7) {
+			return;
 		}
+		System.out.format("Seu navio é %dx%d", navios.get(index).linha, navios.get(index).coluna);
+		System.out.format("\n Insira a linha do %d navio: ", index);
+		nl = scanner(scanner);
 
+		System.out.format("\n Insira a coluna do %d navio: ", index);
+		nc = scanner(scanner);
+		isInsert = insert(nl, nc, navios.get(index), t);
+		if (validacao(nl, nc) && isInsert) {
+			inserirNavios(navios, t, index + 1);
+		} else if (index <= 6) {
+			inserirNavios(navios, t, index);
+		}
 	}
 
 	public static boolean disparo(int l, int c, Tabuleiro t) {
@@ -126,7 +68,7 @@ public class App {
 		return false;
 	}
 
-	public static boolean endGame(Tabuleiro t, int jogador) {
+	public static boolean endGame(Tabuleiro t, int jogador, String nomeJogador) {
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 10; j++) {
 				if (t.tabuleiro[i][j] == 1) {
@@ -134,32 +76,30 @@ public class App {
 				}
 			}
 		}
-		
-		System.out.println("Parabens você ganhou jogador: "+ jogador);
+
+		System.out.format("Parabens %s você ganhou", nomeJogador);
 		return true;
 	}
 
 	public static void main(String[] args) {
-		Tabuleiro t1 = new Tabuleiro();
-		Tabuleiro t2 = new Tabuleiro();
-
-		Navio n1 = new Navio(1, 4);
-		Navio n2 = new Navio(1, 1);
-		Navio n3 = new Navio(2, 2);
-		Navio n4 = new Navio(3, 2);
+		Jogador jogador01 = new Jogador("Iago");
+		Jogador jogador02 = new Jogador("Jose");
 
 		Scanner scanner = new Scanner(System.in);
 
 		System.out.println("Jogador 01 pode colocar seus navios no mar");
-		inserirNavios(n1, n2, n3, n4, t1, 1);
+		inserirNavios(jogador01.navios, jogador01.tabuleiro, 1);
 		System.out.println("Jogador 02 pode colocar seus navios no mar");
-		inserirNavios(n1, n2, n3, n4, t2, 1);
+		inserirNavios(jogador02.navios, jogador02.tabuleiro, 1);
 		System.out.println("Vamos começar o jogo");
+	
 		int nl = 0;
 		int nc = 0;
 		int currentPlayer = 1;
-		while (!endGame(t1, currentPlayer) && !endGame(t2, currentPlayer)) {
-			System.out.println("Vez do jogador: " + currentPlayer);
+		String currentPlayerName = jogador01.nome;
+	
+		while (!endGame(jogador01.tabuleiro, currentPlayer, jogador01.nome) && !endGame(jogador02.tabuleiro, currentPlayer, jogador02.nome)) {
+			System.out.format("Vez do %s jogar", currentPlayerName);
 			if (currentPlayer == 1) {
 
 				System.out.format("Insira uma linha: ");
@@ -169,25 +109,25 @@ public class App {
 				nc = scanner(scanner);
 				while (!validacao(nl, nc)) {
 					System.out.println("Tente um numero dentro do tabuleiro capitão!!!");
-
+				
 					System.out.format("Insira uma linha: ");
 					nl = scanner(scanner);
-
 					System.out.format("Insira uma coluna: ");
 					nc = scanner(scanner);
 				}
 
-				disparo(nl, nc, t2);
-				t1.showTabuleiro();
+				disparo(nl, nc, jogador02.tabuleiro);
+				jogador01.tabuleiro.showTabuleiro();
 				currentPlayer = 2;
+				currentPlayerName = jogador02.nome;
 			} else {
-			
+
 				System.out.format("Insira uma linha: ");
 				nl = scanner(scanner);
 
 				System.out.format("Insira uma coluna: ");
 				nc = scanner(scanner);
-				
+
 				while (!validacao(nl, nc)) {
 					System.out.println("Tente um numero dentro do tabuleiro capitão!!!");
 
@@ -197,12 +137,11 @@ public class App {
 					System.out.format("Insira uma coluna: ");
 					nc = scanner(scanner);
 				}
-
-
-				System.out.flush();
-				disparo(nl, nc, t1);
-				t2.showTabuleiro();
+				disparo(nl, nc, jogador01.tabuleiro);
+				jogador02.tabuleiro.showTabuleiro();
+				
 				currentPlayer = 1;
+				currentPlayerName = jogador01.nome;
 			}
 
 		}
