@@ -8,4 +8,9 @@ public class Navio {
     this.coluna = coluna;
   }
 
+  public void inverterNavio(){
+    int aux = this.coluna;
+    this.coluna = this.linha;
+    this.linha = aux;
+  }
 }
