@@ -1,0 +1,16 @@
+Scenario: Instanciar um tabuleiro
+Given: Dado que um jogo começou 
+When: Eu tentar instânciar um tabuleiro com os dados de inicialização corretos 
+Then: Eu devo receber como retorno um objeto do tipo Jogador
+
+Scenario: Mostrar um tabuleiro
+Given: Dado que um jogo começou 
+When: Eu tentar mostrar um tabuleiro 
+Then: Eu devo receber como retorno o tabuleiro desejado
+
+===================================================================
+
+Scenario: Instanciar um tabuleiro com valores errados 
+Given: Dado que um jogo começou 
+When: Eu tentar instânciar um tabuleiro com os dados de inicialização incorretos 
+Then: Eu devo receber como retorno um erro

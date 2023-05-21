@@ -1,29 +1,48 @@
-Scenario: Iniciar um jogo
-    Given: Dado que eu quero iniciar um novo jogo
-    When:  Eu tentar instânciar o jogo usando a propria classe game controller
-    Then:  O jogo deve ser iniciado 
 
-Scenario: Finalizar um jogo
-    Given: Dado que eu tenho um jogo iniciado
-    When:  Eu chegar na condição de finalização de jogo
-    Then:  O game controller deve ser capaz de finalizar o loop do jogo
+Scenario: Iniciar um jogo de batalha naval
+Given: Jogo de batalha naval está pronto
+When: O jogador iniciar o jogo
+Then: Os jogadores já poderão informar seus nomes
 
-Scenario: Passar as rodadas
-    Given: Dado que eu tenho um jogo iniciado
-    When:  Um jogador fizer uma jogada
-    Then:  O game controller deve ser capaz de passar a vez para o próximo jogador caso não tenha atingido a condição de parada
+Scenario: Posicionar um navio no tabuleiro
+Given: Usuario ja tenha começado o jogo
+When: Jogador posiciona um navio em uma coordenada válida
+Then: Navio é colocado no tabuleiro na posição especificada
 
-Scenario: Retornar uma mensagem
-    Given: Dado que eu tenho um jogo iniciado
-    When:  Eu precisar mostrar algo na tela
-    Then:  O game controller deve ser capaz de escrever no terminal para trazer informações
-    
-Scenario: Criar um Jogador
-    Given: Dado que eu tenho um jogo iniciado
-    When:  Eu estiver no setup do jogo
-    Then:  O game controller deve ser capaz de criar um jogador novo
+Scenario: Atacar todas as coordenadas ocupadas por navios e vencer o jogo
+Given: Tabuleiro de batalha está exibido
+E todos os navios foram posicionados corretamente
+When: Jogador ataca todas as coordenadas ocupadas pelos navios
+Then: Tabuleiro exibe acerto com um "x" para cada coordenada
+And é exibido na tela qual jogador ganhou
 
-Scenario: Inicializar os navios
-    Given: Dado que eu tenho um jogo iniciado
-    When:  Eu chegar na condição de setup de jogo
-    Then:  O game controller deve ser capaz de iniciar os navios da partida
+Scenario: Inicializar os navios 
+Given: Dado que eu tenho um jogo iniciado 
+When: Eu chegar na condição de setup de jogo 
+Then: O game controller deve ser capaz de iniciar os navios da partida
+====================================================================================================
+
+Scenario: Atacar uma coordenada vazia
+Given: Tabuleiro de batalha está exibido
+And os navios foram posicionados corretamente
+When: O jogador ataca uma coordenada vazia
+Then: O resultado do ataque é "Água" e é exibido no tabuleiro
+
+
+Scenario: Atacar uma coordenada ocupada por um navio
+Given: Tabuleiro de batalha está exibido
+And os navios foram posicionados corretamente
+When: Jogador ataca a coordenada ocupada pelo navio do outro jogador
+Then: Tabuleiro exibe acerto com um "x" na cordenada especificada
+
+
+Scenario: Tentar atacar em uma cordenada inválida
+Given: Todos os navios já foram posicionados
+When: Jogador tentar atacar em um cordenada fora do tabuleiro
+Then: Apareçera uma mensagem de erro e pedirá para inserir outra cordenada
+
+Scenario: Tentar posicionar navio em um cordenada inválida
+Given: O jogo já foi começado
+And tabuleiro está sendo exibido
+When: Jogador tentar posicionar o navio em um cordenada fora do tabuleiro ou já preenchida
+Then: Apareçera uma mensagem de erro e pedirá para inserir outra cordenada
